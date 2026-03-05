@@ -176,7 +176,7 @@ body {
   padding: 9px 12px; border-radius: var(--radius);
   color: var(--text-2); font-size: 13.5px; font-weight: 500;
   cursor: pointer; transition: all 0.18s; margin-bottom: 2px;
-  position: relative; user-select: none;
+  position: relative; -webkit-user-select: none; user-select: none;
 }
 .nav-item:hover { background: var(--ink-4); color: var(--text); }
 .nav-item.active {
@@ -245,6 +245,7 @@ body {
   border-left: 1px solid var(--line);
   border-right: 1px solid var(--line);
   padding: 0 16px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
   mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
 }
 .tb-ticker {
@@ -694,6 +695,7 @@ select.form-input option { background: var(--ink-3); }
 .overlay {
   position: fixed; inset: 0; z-index: 500;
   background: rgba(8,12,18,0.8);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   display: none; align-items: center; justify-content: center;
 }
@@ -742,6 +744,17 @@ select.form-input option { background: var(--ink-3); }
 #inspire .iq { font-family: 'Fraunces', serif; font-style: italic; color: var(--text-2); }
 #inspire strong { color: var(--gold-lt); font-style: normal; }
 #inspire .id { margin-left: auto; font-family: 'Fira Code', monospace; font-size: 11px; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ UTILITIES */
+.d-none { display: none !important; }
+.fs-24 { font-size: 24px; }
+.txt-empty { font-size: 13px; color: var(--text-3); font-style: italic; padding: 8px 0; }
+.txt-empty-center { text-align: center; padding: 40px; color: var(--text-3); font-family: 'Fraunces', serif; font-style: italic; }
+.btn-reg-ext { font-size: 12px; padding: 7px 14px; }
+.flex-col-8 { display: flex; flex-direction: column; gap: 8px; }
+.flex-row-8 { display: flex; align-items: center; gap: 8px; }
+.note-txt { color: var(--text-3); font-size: 11px; margin-top: 6px; }
+.note-txt-sm { color: var(--text-3); font-size: 11px; }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ DIVIDER */
 .divider { height: 1px; background: var(--line); margin: 4px 0; }
@@ -799,20 +812,20 @@ select.form-input option { background: var(--ink-3); }
 
     <div class="sb-section">Navigation</div>
     <div class="sb-nav">
-      <div class="nav-item active" onclick="switchPanel('countdown')" id="ni-countdown">
+      <div class="nav-item active" role="button" tabindex="0" onkeydown="if(event.key==='Enter')switchPanel('countdown')" onclick="switchPanel('countdown')" id="ni-countdown">
         <div class="ni-icon">⏱</div>
         Countdown
-        <div class="nav-badge" id="ni-badge" style="display:none">0</div>
+        <div class="nav-badge d-none" id="ni-badge">0</div>
       </div>
-      <div class="nav-item" onclick="switchPanel('calendar')" id="ni-calendar">
+      <div class="nav-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter')switchPanel('calendar')" onclick="switchPanel('calendar')" id="ni-calendar">
         <div class="ni-icon">📅</div>
         Calendar
       </div>
-      <div class="nav-item" onclick="switchPanel('todo')" id="ni-todo">
+      <div class="nav-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter')switchPanel('todo')" onclick="switchPanel('todo')" id="ni-todo">
         <div class="ni-icon">✓</div>
         Task List
       </div>
-      <div class="nav-item" onclick="switchPanel('registry')" id="ni-registry">
+      <div class="nav-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter')switchPanel('registry')" onclick="switchPanel('registry')" id="ni-registry">
         <div class="ni-icon">📋</div>
         Exam Registry
       </div>
@@ -868,7 +881,7 @@ select.form-input option { background: var(--ink-3); }
         </div>
         <div class="stat-card c-sky">
           <div class="stat-label">Next Exam In</div>
-          <div class="stat-val c-sky" id="st-next" style="font-size:24px">—</div>
+          <div class="stat-val c-sky fs-24" id="st-next">—</div>
           <div class="stat-meta" id="st-next-name">No upcoming</div>
         </div>
       </div>
@@ -926,13 +939,13 @@ select.form-input option { background: var(--ink-3); }
         <div class="cal-events-card">
           <div class="cal-ev-hdr">Events on Selected Date</div>
           <div id="cal-ev-list">
-            <div style="font-size:13px;color:var(--text-3);font-style:italic;padding:8px 0;">Select a date to view events.</div>
+            <div class="txt-empty">Select a date to view events.</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- TODO PANEL -->
+    <!-- TASK LIST PANEL -->
     <div class="panel" id="panel-todo">
       <div class="sec-hdr">
         <div class="sec-hdr-icon">✓</div>
@@ -943,8 +956,8 @@ select.form-input option { background: var(--ink-3); }
         <div class="sec-hdr-pill" id="todo-pill">0 tasks</div>
       </div>
       <div class="todo-add-row">
-        <input class="form-input" id="todo-in" placeholder="Add a new task… press Enter" style="flex:1" onkeydown="if(event.key==='Enter')addTodo()" />
-        <select class="form-input" id="todo-pri" style="width:auto;padding:9px 10px;">
+        <input class="form-input todo-in-ext" id="todo-in" placeholder="Add a new task… press Enter" onkeydown="if(event.key==='Enter')addTodo()" />
+        <select class="form-input todo-pri-ext" id="todo-pri">
           <option value="h">🔴 High</option>
           <option value="m" selected>🟡 Medium</option>
           <option value="l">🟢 Low</option>
@@ -964,9 +977,9 @@ select.form-input option { background: var(--ink-3); }
           <div class="sec-hdr-title">Exam Registry</div>
           <div class="sec-hdr-sub">Full list of all scheduled examinations</div>
         </div>
-        <button class="btn-primary" onclick="openModal()" style="font-size:12px;padding:7px 14px;">+ Add Exam</button>
+        <button class="btn-primary btn-reg-ext" onclick="openModal()">+ Add Exam</button>
       </div>
-      <div id="registry-list" style="display:flex;flex-direction:column;gap:8px;"></div>
+      <div id="registry-list" class="flex-col-8"></div>
     </div>
 
   </main>
@@ -974,8 +987,8 @@ select.form-input option { background: var(--ink-3); }
   <!-- RIGHT SIDEBAR -->
   <aside id="rightbar">
     <div class="rb-tabs">
-      <div class="rb-tab active" onclick="rbTab('notebook')">📓 Notes</div>
-      <div class="rb-tab" onclick="rbTab('reminders')">🔔 Alerts</div>
+      <div class="rb-tab active" role="tab" tabindex="0" onkeydown="if(event.key==='Enter')rbTab('notebook')" onclick="rbTab('notebook')">📓 Notes</div>
+      <div class="rb-tab" role="tab" tabindex="0" onkeydown="if(event.key==='Enter')rbTab('reminders')" onclick="rbTab('reminders')">🔔 Alerts</div>
     </div>
 
     <div class="rb-panel active" id="rbp-notebook">
@@ -996,12 +1009,12 @@ select.form-input option { background: var(--ink-3); }
           <button class="btn-sm" onclick="saveNote()">Save Note</button>
         </div>
       </div>
-      <div id="saved-notes-wrap" style="display:flex;flex-direction:column;gap:8px;"></div>
+      <div id="saved-notes-wrap" class="flex-col-8"></div>
     </div>
 
     <div class="rb-panel" id="rbp-reminders">
-      <div id="rem-list" style="display:flex;flex-direction:column;gap:8px;">
-        <div style="text-align:center;padding:40px;color:var(--text-3);font-family:'Fraunces',serif;font-style:italic;">No upcoming exams.</div>
+      <div id="rem-list" class="flex-col-8">
+        <div class="txt-empty-center">No upcoming exams.</div>
       </div>
     </div>
   </aside>
@@ -1120,12 +1133,13 @@ function initTicker() {
 }
 
 /* ──── CLOCK */
+function tick() {
+  const n = new Date();
+  document.getElementById('clk-time').textContent = n.toLocaleTimeString('en-IN', {hour12:false});
+  document.getElementById('clk-date').textContent = n.toLocaleDateString('en-IN', {weekday:'short',day:'numeric',month:'short'});
+}
+
 function initClock() {
-  function tick() {
-    const n = new Date();
-    document.getElementById('clk-time').textContent = n.toLocaleTimeString('en-IN', {hour12:false});
-    document.getElementById('clk-date').textContent = n.toLocaleDateString('en-IN', {weekday:'short',day:'numeric',month:'short'});
-  }
   tick(); setInterval(tick, 1000); setInterval(renderCDs, 1000); setInterval(updateStats, 5000);
 }
 
@@ -1208,10 +1222,10 @@ function updateStats() {
   }
   // badge
   const badge = document.getElementById('ni-badge');
-  if (exams.length > 0) { badge.textContent = exams.length; badge.style.display = 'flex'; }
-  else badge.style.display = 'none';
-  document.getElementById('cd-count-pill').textContent = exams.length + ' exam' + (exams.length!==1?'s':'');
-  document.getElementById('todo-pill').textContent = todos.length + ' task' + (todos.length!==1?'s':'');
+  if (exams.length > 0) { badge.textContent = exams.length; badge.classList.remove('d-none'); }
+  else badge.classList.add('d-none');
+  document.getElementById('cd-count-pill').textContent = exams.length + ' exam' + (exams.length===1?'':'s');
+  document.getElementById('todo-pill').textContent = todos.length + ' task' + (todos.length===1?'':'s');
 }
 
 /* ──── COUNTDOWN */
@@ -1230,8 +1244,9 @@ function renderCDs() {
     const hh = Math.max(0, Math.floor((diff % 86400000) / 3600000));
     const mm = Math.max(0, Math.floor((diff % 3600000) / 60000));
     const ss = Math.max(0, Math.floor((diff % 60000) / 1000));
-    const cls = dd <= 2 ? 'urgent' : dd <= 7 ? 'soon' : 'normal';
-    const tagTxt = dd <= 2 ? 'Critical' : dd <= 7 ? 'This Week' : 'Upcoming';
+    let cls = 'normal';
+    let tagTxt = 'Upcoming';
+    if (dd <= 2) { cls = 'urgent'; tagTxt = 'Critical'; } else if (dd <= 7) { cls = 'soon'; tagTxt = 'This Week'; }
     return `<div class="cd-card ${cls}">
       <div class="cd-card-top">
         <div class="cd-subject-tag ${cls}">${tagTxt}</div>
@@ -1248,7 +1263,7 @@ function renderCDs() {
       <div class="cd-footer">
         <div class="cd-dot"></div>
         ${new Date(ex.date+'T00:00').toLocaleDateString('en-IN',{day:'numeric',month:'long',year:'numeric'})} · ${ex.time||'09:00'}
-        ${ex.notes ? ` · <em style="color:var(--text-3);font-size:11px;">${ex.notes}</em>` : ''}
+        ${ex.notes ? ` · <em class="note-txt-sm">${ex.notes}</em>` : ''}
       </div>
     </div>`;
   }).join('');
@@ -1265,20 +1280,21 @@ function renderRegistry() {
   }
   c.innerHTML = sorted.map(ex => {
     const d = Math.ceil((new Date(ex.date) - now) / 86400000);
-    const cls = d <= 2 ? 'urgent' : d <= 7 ? 'soon' : '';
-    const tagCls = d <= 2 ? 'urgent' : d <= 7 ? 'soon' : 'ok';
+    let cls = '';
+    let tagCls = 'ok';
+    if (d <= 2) { cls = 'urgent'; tagCls = 'urgent'; } else if (d <= 7) { cls = 'soon'; tagCls = 'soon'; }
     const tagTxt = d <= 0 ? 'Today' : d + ' days left';
     return `<div class="rem-item ${cls}">
       <div class="ri-subj">${ex.subject}</div>
       <div class="ri-name">${ex.name}</div>
       <div class="ri-foot">
         <div class="ri-date">${new Date(ex.date+'T00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})} · ${ex.time||'09:00'}</div>
-        <div style="display:flex;align-items:center;gap:8px;">
+        <div class="flex-row-8">
           <span class="ri-days ${tagCls}">${tagTxt}</span>
           <span class="ri-del" onclick="delExam(${ex.id})">✕</span>
         </div>
       </div>
-      ${ex.notes ? `<div style="font-size:11px;color:var(--text-3);margin-top:6px;">📎 ${ex.notes}</div>` : ''}
+      ${ex.notes ? `<div class="note-txt">📎 ${ex.notes}</div>` : ''}
     </div>`;
   }).join('');
 }
@@ -1289,20 +1305,21 @@ function renderReminders() {
   const now = new Date();
   const sorted = [...exams].sort((a,b) => new Date(a.date)-new Date(b.date));
   if (!sorted.length) {
-    c.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-3);font-family:'Fraunces',serif;font-style:italic;">No upcoming exams.</div>`;
+    c.innerHTML = `<div class="txt-empty-center">No upcoming exams.</div>`;
     return;
   }
   c.innerHTML = sorted.map(ex => {
     const d = Math.ceil((new Date(ex.date) - now) / 86400000);
-    const cls = d <= 2 ? 'urgent' : d <= 7 ? 'soon' : '';
-    const tagCls = d <= 2 ? 'urgent' : d <= 7 ? 'soon' : 'ok';
+    let cls = '';
+    let tagCls = 'ok';
+    if (d <= 2) { cls = 'urgent'; tagCls = 'urgent'; } else if (d <= 7) { cls = 'soon'; tagCls = 'soon'; }
     const tagTxt = d <= 0 ? 'Today' : d + 'd left';
     return `<div class="rem-item ${cls}">
       <div class="ri-subj">${ex.subject}</div>
       <div class="ri-name">${ex.name}</div>
       <div class="ri-foot">
         <div class="ri-date">${new Date(ex.date+'T00:00').toLocaleDateString('en-IN',{day:'2-digit',month:'short'})}</div>
-        <div style="display:flex;align-items:center;gap:8px;">
+        <div class="flex-row-8">
           <span class="ri-days ${tagCls}">${tagTxt}</span>
           <span class="ri-del" onclick="delExam(${ex.id})">✕</span>
         </div>
@@ -1321,13 +1338,13 @@ function renderCal() {
   const first = new Date(calY, calM, 1).getDay();
   const days = new Date(calY, calM+1, 0).getDate();
   const today = new Date();
-  const edates = exams.map(e => e.date);
+  const edates = new Set(exams.map(e => e.date));
   const prev = new Date(calY, calM, 0).getDate();
   for (let i = first-1; i >= 0; i--) g.innerHTML += `<div class="cal-day other">${prev-i}</div>`;
   for (let d = 1; d <= days; d++) {
     const ds = `${calY}-${String(calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const isTod = today.getDate()===d && today.getMonth()===calM && today.getFullYear()===calY;
-    const hasE = edates.includes(ds);
+    const hasE = edates.has(ds);
     g.innerHTML += `<div class="cal-day${isTod?' today':''}${hasE?' has-exam':''}" onclick="selDay('${ds}',this)">${d}</div>`;
   }
   const rem = (7-(first+days)%7)%7;
@@ -1340,11 +1357,11 @@ function selDay(date, el) {
   const de = exams.filter(e => e.date === date);
   const c = document.getElementById('cal-ev-list');
   if (!de.length) {
-    c.innerHTML = `<div style="font-size:13px;color:var(--text-3);font-style:italic;padding:8px 0;">No exams on ${new Date(date+'T00:00').toLocaleDateString('en-IN',{day:'numeric',month:'long'})}.</div>`;
+    c.innerHTML = `<div class="txt-empty">No exams on ${new Date(date+'T00:00').toLocaleDateString('en-IN',{day:'numeric',month:'long'})}.</div>`;
     return;
   }
   c.innerHTML = de.map(e => {
-    const d = Math.ceil((new Date(e.date)-new Date())/86400000);
+    const d = Math.ceil((new Date(e.date)-Date.now())/86400000);
     return `<div class="cal-ev-item${d<=2?' crit':''}">
       <div class="cal-ev-subj">${e.subject}</div>
       <div class="cal-ev-name">${e.name}</div>
@@ -1377,12 +1394,17 @@ function renderTodos() {
   const c = document.getElementById('todo-list');
   if (!todos.length) { c.innerHTML = '<div class="todo-empty">All clear — add your first task above.</div>'; return; }
   const active = todos.filter(t=>!t.done), done = todos.filter(t=>t.done);
-  const render = t => `<div class="todo-item${t.done?' done':''}">
+  const render = t => {
+    let priTxt = 'Low';
+    if (t.pri === 'h') priTxt = 'High';
+    else if (t.pri === 'm') priTxt = 'Medium';
+    return `<div class="todo-item${t.done?' done':''}">
     <div class="ti-check" onclick="toggleTodo(${t.id})">${t.done?'✓':''}</div>
     <div class="ti-text">${t.text}</div>
-    <div class="ti-badge ${t.pri}">${t.pri==='h'?'High':t.pri==='m'?'Medium':'Low'}</div>
+    <div class="ti-badge ${t.pri}">${priTxt}</div>
     <div class="ti-del" onclick="delTodo(${t.id})">✕</div>
   </div>`;
+  };
   c.innerHTML = [...active,...done].map(render).join('');
 }
 
