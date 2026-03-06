@@ -388,9 +388,9 @@ body {
   text-transform: uppercase; padding: 4px 10px;
   border-radius: 20px;
 }
-.cd-subject-tag.urgent { background: var(--rose-dim); color: var(--rose); }
-.cd-subject-tag.soon   { background: rgba(255,180,50,0.12); color: #ffb432; }
-.cd-subject-tag.normal { background: var(--teal-dim); color: var(--teal); }
+.cd-subject-tag.urgent { background: var(--rose-dim); color: #f47e77; }
+.cd-subject-tag.soon   { background: rgba(255,180,50,0.12); color: #ebb150; }
+.cd-subject-tag.normal { background: var(--teal-dim); color: #51ceb5; }
 .cd-del-btn {
   color: var(--text-2); font-size: 14px; line-height: 1;
   cursor: pointer; padding: 2px 4px; border-radius: 4px;
@@ -685,9 +685,9 @@ select.form-input option { background: var(--ink-3); }
   font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
   padding: 3px 9px; border-radius: 20px;
 }
-.ri-days.urgent { background: var(--rose-dim); color: var(--rose); }
-.ri-days.soon   { background: rgba(255,180,50,0.12); color: #ffb432; }
-.ri-days.ok     { background: var(--teal-dim); color: var(--teal); }
+.ri-days.urgent { background: var(--rose-dim); color: #f47e77; }
+.ri-days.soon   { background: rgba(255,180,50,0.12); color: #ebb150; }
+.ri-days.ok     { background: var(--teal-dim); color: #51ceb5; }
 .ri-del { color: var(--text-3); font-size: 13px; cursor: pointer; transition: color 0.15s; }
 .ri-del:hover { color: var(--rose); }
 
@@ -755,6 +755,8 @@ select.form-input option { background: var(--ink-3); }
 .flex-row-8 { display: flex; align-items: center; gap: 8px; }
 .note-txt { color: var(--text-3); font-size: 11px; margin-top: 6px; }
 .note-txt-sm { color: var(--text-3); font-size: 11px; }
+.btn-nav-ext { width: 100%; text-align: left; border: none; font-family: inherit; background: transparent; }
+.btn-sn-ext { background: transparent; border: none; }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ DIVIDER */
 .divider { height: 1px; background: var(--line); margin: 4px 0; }
@@ -812,20 +814,20 @@ select.form-input option { background: var(--ink-3); }
 
     <div class="sb-section">Navigation</div>
     <div class="sb-nav">
-      <button class="nav-item active" onclick="switchPanel('countdown')" id="ni-countdown" style="width:100%;text-align:left;border:none;font-family:inherit;">
+      <button class="nav-item active btn-nav-ext" onclick="switchPanel('countdown')" id="ni-countdown">
         <div class="ni-icon">⏱</div>
         Countdown
         <div class="nav-badge d-none" id="ni-badge">0</div>
       </button>
-      <button class="nav-item" onclick="switchPanel('calendar')" id="ni-calendar" style="width:100%;text-align:left;border:none;font-family:inherit;">
+      <button class="nav-item btn-nav-ext" onclick="switchPanel('calendar')" id="ni-calendar">
         <div class="ni-icon">📅</div>
         Calendar
       </button>
-      <button class="nav-item" onclick="switchPanel('todo')" id="ni-todo" style="width:100%;text-align:left;border:none;font-family:inherit;">
+      <button class="nav-item btn-nav-ext" onclick="switchPanel('todo')" id="ni-todo">
         <div class="ni-icon">✓</div>
         Task List
       </button>
-      <button class="nav-item" onclick="switchPanel('registry')" id="ni-registry" style="width:100%;text-align:left;border:none;font-family:inherit;">
+      <button class="nav-item btn-nav-ext" onclick="switchPanel('registry')" id="ni-registry">
         <div class="ni-icon">📋</div>
         Exam Registry
       </button>
@@ -1370,7 +1372,7 @@ function selDay(date, el) {
   }).join('');
 }
 
-/* ──── TASKS */
+/* ──── ACTIVE TASKS */
 function addTodo() {
   const t = document.getElementById('todo-in').value.trim();
   const p = document.getElementById('todo-pri').value;
@@ -1431,7 +1433,7 @@ function renderSavedNotes() {
     notes.map(n => `<div class="saved-note-item">
       <div class="sn-date">Saved ${n.date}</div>
       <div class="sn-body">${n.text.substring(0,160)}${n.text.length>160?'…':''}</div>
-      <button style="background:transparent;border:none" class="sn-del" onclick="notes=notes.filter(x=>x.id!==${n.id});localStorage.setItem('scholar-notes',JSON.stringify(notes));renderSavedNotes();">✕</button>
+      <button class="sn-del btn-sn-ext" onclick="notes=notes.filter(x=>x.id!==${n.id});localStorage.setItem('scholar-notes',JSON.stringify(notes));renderSavedNotes();">✕</button>
     </div>`).join('');
 }
 </script>
